@@ -8,7 +8,7 @@ g = gauss_input(filename='file')
 #param_dict={level_of_theory='DFT',functional='B3LYP',basis_set='6-311++g(3df,2p)',runtype='opt',...
 #  ...optional_params=['noeigentest','ts','calcfc'],add_runtype='freq',add_params=['recalc=5','noraman'],...
    ...memory='15MB',cores=4,nodes=2}
-#g = gauss_input(param_dict=dict)
+#g = gauss_input(parameters=param_dict)
 #outputs gauss_ouput class 
 goutput = g.run()
 print(goutput.freqs)
