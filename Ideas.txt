@@ -1,0 +1,16 @@
+#Heyooo this is just my scratch code. Trying to figure out how I want to structure this baby.
+
+from gausswork import *
+#import all data from existing input file
+#directly put into gauss_input class
+g = gauss_input(filename='file')
+#otherwise provide parameters
+#param_dict={level_of_theory='DFT',functional='B3LYP',basis_set='6-311++g(3df,2p)',runtype='opt',...
+#  ...optional_params=['noeigentest','ts','calcfc'],add_runtype='freq',add_params=['recalc=5','noraman'],...
+   ...memory='15MB',cores=4,nodes=2}
+#g = gauss_input(param_dict=dict)
+#outputs gauss_ouput class 
+goutput = g.run()
+print(goutput.freqs)
+# Should print out frequencies have all other parameters etc. already extracted and ready to be used for future calculations.
+goutput.geom should be a list or some other similar structure to make sure it can account for IRC runs with multiple geometries.
