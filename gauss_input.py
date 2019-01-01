@@ -1,4 +1,5 @@
 #Gaussian input file generator class
+import re
 from subprocess import call
 class Gauss_Input():
     def __init__(self,filename,parameters):
@@ -38,7 +39,29 @@ class Gauss_Input():
                 k,v = line.split('=')
                 parameter_dict[k]=v
             if '#' in [line, contents[i-1], contents[i-2]]:
-                line = line.replace('#','')
+                line = line.replace('#','').split()
+                runs,run_params=[],[]
+                for l in line:
+                    if l.split('(')[0].split('=')[0] in ['opt','freq','irc','scan']:
+                        rps = re.search('(\(.+?\))', l)
+                        if rps:
+                            run_params.append(rps.group(1).split(','))
+                            runs.append(l.split('(')[0])
+                        elif '=' in l:
+                            run_params.append([l.split('=')[1]])
+                            runs.append(l.split('=')[0])
+                        else:
+                            runs.append(l)
+                runs.append(None)
+                run_params.append(None)
+                if runs[0]==None:
+                    parameter_dict['runtype']='energy'
+                else:
+                    parameter_dict['runtype']=runs[0]
+                    parameter_dict['run_params']=run_params[0]
+                    parameter_dict['add_runtype']=runs[1]
+                    parameter_dict['add_params']=run_params[1]
+
 
 
 
