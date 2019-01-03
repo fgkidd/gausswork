@@ -16,8 +16,7 @@ class Gauss_Output():
         }
         with open(filename,'r') as myfile:
             contents = myfile.readlines()
-        geom_here,begin_geom,atom_here = False, False, False
-        for line in contents:
+        for i,line in enumerate(contents):
             translate=[
                 ('Frequencies','frequencies'),
                 ('Red. masses','reduced_masses'),
@@ -39,21 +38,17 @@ class Gauss_Output():
             if (parameter_dict['rotational_constants'] == []) and ('(GHZ)' in line): 
                 parameter_dict['rotational_constants'].extend(line.split(':')[1].split())
             if 'Standard orientation' in line:
-                geom=[]
-                geom_here = True
-            if geom_here and '1' in line:
-                begin_geom = True
-            if begin_geom and (not '--' in line):
-                geom.append(line.split()[3:6])
-            if begin_geom and '--' in line:
-                geom_here,begin_geom = False, False
+                j,geom = i+5,[]
+                while '-----' not in contents[j]:
+                    geom.append(contents[j].split()[3:6])
+                    j+=1
                 parameter_dict['cartesian_coordinates'].extend(geom)
             if 'Charge = ' in line:
-                atom_here = True
-            if atom_here and len(line.split())==4:
-                parameter_dict['atoms'].append(line.split()[0])
-            if atom_here and line == '\n':
-                atom_here = False
+                j=i+2
+                while contents[j] != ' \n':
+                    parameter_dict['atoms'].append(contents[j].split()[0])
+                    j+=1
         parameter_dict['E']=float(parameter_dict['U'])-float(parameter_dict['UPC'])
+        print(parameter_dict)
         return parameter_dict
 g=Gauss_Output('G:/My Drive/Work/2017/Species-4-Kin/H2NOandHNO.out')
