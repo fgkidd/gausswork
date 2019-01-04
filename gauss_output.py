@@ -1,9 +1,19 @@
 import re
+import os
 class Gauss_Output():
     def __init__(self,filename):
+        self.filename = filename
         parameters = self._get_parameters(filename)
         for k,v in parameters.items():
             setattr(self,k,v)
+    def __str__(self):
+        width = len(os.path.basename(self.filename))
+        text=os.path.basename(self.filename)+'\n'
+        text+='-'*width+'\n'
+        for a, cc in zip(self.atoms,self.cartesian_coordinates[0]):
+            text+=a+'\t'+cc[0]+'\t'+cc[1]+'\t'+cc[2]+'\n'
+        text+='\n'
+        return text
     def _get_parameters(self,filename):
         parameter_dict={
             'frequencies':[],
@@ -42,13 +52,13 @@ class Gauss_Output():
                 while '-----' not in contents[j]:
                     geom.append(contents[j].split()[3:6])
                     j+=1
-                parameter_dict['cartesian_coordinates'].extend(geom)
+                parameter_dict['cartesian_coordinates'].append(geom)
             if 'Charge = ' in line:
                 j=i+2
                 while contents[j] != ' \n':
                     parameter_dict['atoms'].append(contents[j].split()[0])
                     j+=1
         parameter_dict['E']=float(parameter_dict['U'])-float(parameter_dict['UPC'])
-        print(parameter_dict)
         return parameter_dict
 g=Gauss_Output('G:/My Drive/Work/2017/Species-4-Kin/H2NOandHNO.out')
+print(g)
