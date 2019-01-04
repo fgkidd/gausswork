@@ -1,6 +1,7 @@
 #Gaussian input file generator class
 import re
 from subprocess import call
+from gauss_output import *
 class Gauss_Input():
     def __init__(self,filename=None,parameters=None):
         if filename != None:
@@ -10,7 +11,21 @@ class Gauss_Input():
     def __str__(self):
         self._write()
         return self._input_file
-    '''
+    def run(self):
+        with open('system_information.txt','r') as myfile: 
+            exe = '"'+myfile.readline().split('=')[1]+'"'
+        dir = os.getcwd()
+        filename = self.title.split('.gjf')[0].split('.com')[0]
+        inp = '"'+dir+filename+'.gjf"'
+        out = '"'+dir+filename+'.out"'
+        try:
+            os.remove(inp)
+            os.remove(out)
+        except:
+            with open(inp,'a') as myfile:
+                myfile.write(self._input_file)
+            call(exe,inp,out)
+    '''     
     @property
     def geometry(self):
         self.geometry = geometry
@@ -140,4 +155,6 @@ class Gauss_Input():
 
 g=Gauss_Input('G:/My Drive/Work/2017/Species-4-Kin/H2NN.gjf')
 g.level_of_theory='HF'
+g.basis_Set='3-21'
 print(g)
+g.run()
