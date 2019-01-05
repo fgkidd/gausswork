@@ -26,6 +26,7 @@ class Gauss_Input():
         with open(inp,'a') as myfile:
             myfile.write(self._input_file)
         call([exe,inp,out])
+        return Gauss_Output(out)
 
     '''     
     @property
